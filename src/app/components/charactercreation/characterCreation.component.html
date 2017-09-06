@@ -1,42 +1,96 @@
-<h1>CHARACTER CREATION</h1>
+<div class="form-group">
+  <button class="btn btn-danger" (click)="MainMenu()">Return to main menu</button>
+</div>
 <div class="row">
   <div class="col-xs-4">
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">Biography</h4>
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Biography</h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Player Name</label>
+            <input class="form-control" type="text" [(ngModel)]="character.playerName" placeholder="Name" />
+            <label>Character Name</label>
+            <input class="form-control" type="text" [(ngModel)]="character.characterName" placeholder="Name" />
+          </div>
+        </div>
       </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label>Player Name</label>
-          <input class="form-control" type="text" [(ngModel)]="character.playerName" placeholder="Name" />
-          <label>Character Name</label>
-          <input class="form-control" type="text" [(ngModel)]="character.characterName" placeholder="Name" />
+      <div class="panel panel-default">
+        <div class="panel panel-heading">
+          <h4 class="panel-title">Equipment</h4>
+        </div>
+        <div class="panel-body">
+          <h4>Weapons</h4>
+          <label *ngFor="let choice of equipmentChoice1" class="radio-inline"><input type="radio" name="choice1" [(ngModel)]="character.Weapons[0]" [value]="choice" />{{choice.Name}}</label><br />
+          <label *ngFor="let choice of equipmentChoice2" class="radio-inline"><input type="radio" name="choice2" [(ngModel)]="character.Weapons[1]" [value]="choice" />{{choice.Name}}</label>
+          <div *ngFor="let weapon of character.Weapons">
+            <hr />
+            <label class="list-group-item-heading">{{weapon.Name}}</label>
+            <p class="list-group-item-text">Damage die: d{{weapon.DamageDie}}</p>
+            <p *ngIf="weapon.IsRanged" class="list-group-item-text">Range: {{weapon.Range}}/{{weapon.Range * 3}}</p>
+            <p *ngIf="weapon.RequiresAmmo" class="list-group-item-text">Ammo: {{weapon.Ammo}}</p>
+            <p *ngIf="weapon.Properties.length > 0" class="list-group-item-text">Properties:</p>
+            <ul *ngIf="weapon.Properties.length > 0">
+              <li *ngFor="let property of weapon.Properties">
+                {{property}}
+              </li>
+            </ul>
+          </div>
+          <hr />
+          <h4>Armour</h4>
+          <label>{{character.Armour.Name}}</label>
+          <p>Base AC: {{character.Armour.AC}}</p>
+          <p *ngIf="character.Armour.MinStrength > 0">Required Strength: {{character.Armour.MinStrength}}</p>
+          <p *ngIf="character.Armour.MaxDexterityToAC >= 0">Max Dexterity to AC: {{character.Armour.MaxDexterityToAC}}</p>
+          <p *ngIf="character.Armour.StealthPenalty">Impedes stealth</p>
+          <h4>Items</h4>
+          <ul *ngFor="let item of character.Items">
+            <li>{{item}}</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
   <div class="col-xs-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">Ability Scores</h4>
-      </div>
-      <div class="panel-body">
-        <label>Remaining points: {{totalPointBuyRemaining}}</label>
-        <div *ngFor="let abilityScore of character.abilityScores">
-          <label>{{AbilityScoreName[abilityScore.Name]}}</label>
-          <div class="input-group ">
-            <span class="input-group-btn">
-              <button class="btn btn-default" (click)="AbilityScoreDecrease(abilityScore)">-</button>
-            </span>
-            <p class="form-control">{{abilityScore.Value}}</p>
-            <span class="input-group-addon">
-              {{Modifier(abilityScore.Value)}}
-            </span>
-            <span class="input-group-btn">
-              <button class="btn btn-default" (click)="AbilityScoreIncrease(abilityScore)">+</button>
-            </span>
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Ability Scores</h4>
+        </div>
+        <div class="panel-body">
+          <label>Remaining points: {{CalculatePointBuy()}}</label>
+          <div *ngFor="let abilityScore of Keys(character.AbilityScores)">
+            <label>{{AbilityScoreName[abilityScore]}}</label>
+            <div class="input-group ">
+              <span class="input-group-btn">
+                <button [disabled]="character.AbilityScores[abilityScore] <= abilityScoreMinValue" class="btn btn-default" (click)="AbilityScoreDecrease(abilityScore)">-</button>
+              </span>
+              <p class="form-control">{{character.AbilityScores[abilityScore]}}</p>
+              <span class="input-group-addon">
+                {{Modifier(character.AbilityScores[abilityScore])}}
+              </span>
+              <span class="input-group-btn">
+                <button [disabled]="character.AbilityScores[abilityScore] >= abilityScoreMaxValue" class="btn btn-default" (click)="AbilityScoreIncrease(abilityScore)">+</button>
+              </span>
+            </div>
           </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Statistics</h4>
+        </div>
+        <div class="panel-body">
+          <label>Race</label>
+          <p>Human</p>
+          <label>Class</label>
+          <p>Rogue {{character.Level}}</p>
+          <label>Armour Class</label>
+          <p>{{character.AC()}}</p>
+          <label>Initiative</label>
+          <p>{{character.Initiative()}}</p>
         </div>
       </div>
     </div>
@@ -48,16 +102,29 @@
       </div>
       <div class="panel-body">
         <label>Remaining skills: {{RemainingSkills()}}</label>
-        <div *ngFor="let skill of character.skills">
-          <label>{{AbilityScoreName[skill.AbilityScore]}} ({{skill.Name}})</label>
+        <label>Remaining expertise: {{RemainingExpertise()}}</label>
+        <div *ngFor="let skillName of Keys(character.Skills)">
+          <label>{{AbilityScoreName[character.Skills[skillName].AbilityScore]}} ({{skillName}})</label>
           <div class="input-group">
-            <p class="form-control">{{character.Skill(skill.Name)}}</p>
-            <span class="input-group-addon">
-              <input type="checkbox" [disabled]="skill.Proficiency === Proficiency.None && RemainingSkills() <= 0" [value]="skill.Proficiency === Proficiency.Proficiency" (change)="ProficiencyChanged($event, skill)" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" [disabled]="character.Skills[skillName].Proficiency === Proficiency.None" (click)="DecreaseProficiency(character.Skills[skillName])">-</button>
+            </span>
+            <p class="form-control">{{character.Skill(skillName)}}</p>
+            <span class="input-group-btn">
+              <button class="btn btn-default" [disabled]="(character.Skills[skillName].Proficiency === Proficiency.None && RemainingSkills() <= 0) || (character.Skills[skillName].Proficiency === Proficiency.Proficiency && RemainingExpertise() <= 0) || (character.Skills[skillName].Proficiency === Proficiency.Expertise)" (click)="IncreaseProficiency(character.Skills[skillName])">+</button>
             </span>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h4 class="panel-title">Save Character</h4>
+  </div>
+  <div class="panel-body">
+    <p>Save this code, it contains all the data for your character.</p>
+    <pre class="pre-wrap">{{EncodeCharacter()}}</pre>
   </div>
 </div>

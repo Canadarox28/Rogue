@@ -9,7 +9,7 @@
   <game></game>
 </div>
 <div *ngIf="activePage === 'characterCreation'">
-  <character-creation></character-creation>
+  <character-creation (onPageSelect)="activePage = $event"></character-creation>
 </div>
 <hr />
 <footer><small>&copy; Copyright 2017, Spiral Staircase Productions</small></footer>
