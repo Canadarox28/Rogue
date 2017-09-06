@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\e2e",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\game",
+    "\\src\\app\\components\\menu",
+    "\\src\\app\\models",
+    "\\src\\app\\resources",
+    "\\src\\app\\services"
+  ],
+  "SelectedNode": "\\src\\app\\components\\charactercreation\\characterCreation.component.ts",
+  "PreviewInSolutionExplorer": false
+}

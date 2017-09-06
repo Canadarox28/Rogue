@@ -1,0 +1,63 @@
+<h1>CHARACTER CREATION</h1>
+<div class="row">
+  <div class="col-xs-4">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Biography</h4>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label>Player Name</label>
+          <input class="form-control" type="text" [(ngModel)]="character.playerName" placeholder="Name" />
+          <label>Character Name</label>
+          <input class="form-control" type="text" [(ngModel)]="character.characterName" placeholder="Name" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Ability Scores</h4>
+      </div>
+      <div class="panel-body">
+        <label>Remaining points: {{totalPointBuyRemaining}}</label>
+        <div *ngFor="let abilityScore of character.abilityScores">
+          <label>{{AbilityScoreName[abilityScore.Name]}}</label>
+          <div class="input-group ">
+            <span class="input-group-btn">
+              <button class="btn btn-default" (click)="AbilityScoreDecrease(abilityScore)">-</button>
+            </span>
+            <p class="form-control">{{abilityScore.Value}}</p>
+            <span class="input-group-addon">
+              {{Modifier(abilityScore.Value)}}
+            </span>
+            <span class="input-group-btn">
+              <button class="btn btn-default" (click)="AbilityScoreIncrease(abilityScore)">+</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Skill Proficiencies</h4>
+      </div>
+      <div class="panel-body">
+        <label>Remaining skills: {{RemainingSkills()}}</label>
+        <div *ngFor="let skill of character.skills">
+          <label>{{AbilityScoreName[skill.AbilityScore]}} ({{skill.Name}})</label>
+          <div class="input-group">
+            <p class="form-control">{{character.Skill(skill.Name)}}</p>
+            <span class="input-group-addon">
+              <input type="checkbox" [disabled]="skill.Proficiency === Proficiency.None && RemainingSkills() <= 0" [value]="skill.Proficiency === Proficiency.Proficiency" (change)="ProficiencyChanged($event, skill)" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
