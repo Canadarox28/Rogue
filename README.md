@@ -1,6 +1,11 @@
 # Rogue
 
+### This project is currently deprecated, and a new version will be started soon using the Unity engine
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.2.
+
+## Description
+The Rogue Engine is a Angular2-based RPG-style text adventure which attempts to accurately represent Dungeons and Dragons 5th edition rules for combat and skill challenges. The goal of this project is to create an engine which can take JSON objects which contain actual story content, and resources such as items and enemies. These JSON files will be created by users and imported to the engine, so that many stories can be written by developers, and a community could be founded to share stories among one another. Eventually, a UI to ease the creation of such scripts will be created.
 
 ## Development server
 
